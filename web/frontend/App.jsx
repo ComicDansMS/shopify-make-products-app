@@ -8,9 +8,7 @@ export default function App() {
     <BrowserRouter>
       <AppBridgeProvider>
         <QueryProvider>
-          <div id="main">
           <HomePage />
-          </div>
         </QueryProvider>
       </AppBridgeProvider>
     </BrowserRouter>
