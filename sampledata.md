@@ -1,0 +1,3 @@
+Soft and Stylish V-Neck Sweater, Relaxed Fit Denim Jeans, Cozy Fleece Jacket, Classic Plaid Button-Down Shirt, Silky Sleeveless Blouse, Distressed Ripped Skinny Jeans, Sleek Leather Biker Jacket, Chunky Oversized Knit Scarf, Slim Fit Chino Pants, Floral Print Maxi Dress, Sherpa Lined Zip-Up Hoodie, Cropped Flare Leg Jeans, Metallic Pleated Skirt, Embroidered Cotton Tee, Ribbed Knit Beanie
+
+Outerwear, Tops, Bottoms, Accessories

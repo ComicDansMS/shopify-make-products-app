@@ -1,31 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuthenticatedFetch } from "../hooks";
-import { Configuration, OpenAIApi } from "openai";
-import toArray from "../helpers/to-array";
-import axios from "axios";
 import TextField from "./Fields/TextField";
 import NumberField from "./Fields/NumberField";
 import CheckboxField from "./Fields/CheckboxField";
 import NewProducts from "./NewProducts";
+import formatProductData from "../helpers/format-product-data";
+import toggleCheckbox from "../helpers/toggle-checkbox";
+
 
 export default function MakeProductsCard() {
   const fetch = useAuthenticatedFetch();
   const [ autoTitles, setAutoTitles] = useState(false);
   const [ productCount, setProductCount ] = useState(5);
   const [ productTitles, setProductTitles ] = useState('');
+  const [ productTags, setProductTags ] = useState('');
   const [ autoTags, setAutoTags] = useState(false);
   const [ tagCount, setTagCount ] = useState(3);
-  const [ productTags, setProductTags ] = useState('');
   const [ isLoading, setIsLoading ] = useState(false);
   const [ newProducts, setNewProducts ] = useState([]);
-
-  function toggleAutoTitles() {
-    autoTitles ? setAutoTitles(false) : setAutoTitles(true);
-  }
-
-  function toggleAutoTags() {
-    autoTags ? setAutoTags(false) : setAutoTags(true);
-  }
 
   function handleSubmit() {
     if (productTitles === '' && autoTitles !== true) {
@@ -33,21 +25,21 @@ export default function MakeProductsCard() {
       return;
     }
 
-    setIsLoading(true)
+    // setIsLoading(true)
 
-    const productDataObj = {};
-    productDataObj.titles = toArray(productTitles);
-    productDataObj.tags = toArray(productTags);
-
-    const productData = JSON.stringify(productDataObj);
+    const productData = formatProductData({
+      titles: autoTitles ? 'auto' : productTitles,
+      tags: autoTags ? 'auto' : productTags,
+    });
 
     fetch(`/api/products/create/${productData}`)
       .then(response => response.json())
       .then(data => {
-        data.forEach(item => {
+        data.forEach(() => {
           setNewProducts(data)
         })
         setIsLoading(false);
+        setProductTitles('');
       })
       .catch(error => {
         setIsLoading(false);
@@ -62,7 +54,7 @@ export default function MakeProductsCard() {
       <CheckboxField
         label='Autogenerate Titles'
         name='autoTitles'
-        onChange={toggleAutoTitles}
+        onChange={() => toggleCheckbox(autoTitles, setAutoTitles)}
       />
 
       {
@@ -88,7 +80,7 @@ export default function MakeProductsCard() {
       <CheckboxField
         label='Autogenerate Tags'
         name='autoTags'
-        onChange={toggleAutoTags}
+        onChange={() => toggleCheckbox(autoTags, setAutoTags)}
       />
 
       {

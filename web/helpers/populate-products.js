@@ -1,4 +1,5 @@
 import { GraphqlQueryError } from "@shopify/shopify-api";
+import toArray from "../frontend/helpers/to-array.js";
 import shopify from "../shopify.js";
 
 const POPULATE_PRODUCTS_MUTATION = `
@@ -6,26 +7,33 @@ const POPULATE_PRODUCTS_MUTATION = `
     productCreate(input: $input) {
       product {
         id,
-        title
+        title,
+        tags
       }
     }
   }
 `;
 
-export default async function populateProducts(session, productData) {
+export default async function populateProducts(session, products) {
   const client = new shopify.api.clients.Graphql({ session });
-  const productDataObj = JSON.parse(productData);
-  const { titles, tags } = productDataObj;
   const newProducts = [];
 
+  // Split products string into array
+  const productsArray = products.split(new RegExp(',(?!")'))
+  
   try {
-    for (let i = 0; i < titles.length; i++) {
+    for (let i = 0; i < productsArray.length; i++) {
+
+      // Convert to JSON object for ease of property assignment
+      const product = JSON.parse(productsArray[i]);
+
       await client.query({
         data: {
           query: POPULATE_PRODUCTS_MUTATION,
           variables: {
             input: {
-              title: `${titles[i]}`,
+              title: `${product.title}`,
+              tags: [`${product.tag}`],
             },
           },
         },
@@ -38,7 +46,7 @@ export default async function populateProducts(session, productData) {
         });
       });
 
-      if (i === titles.length - 1) {
+      if (i === productsArray.length - 1) {
         console.log('Product creation complete');
         return newProducts;
       }
