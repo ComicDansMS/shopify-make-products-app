@@ -42,7 +42,8 @@ export default async function populateProducts(session, products) {
 
         newProducts.push({
           id: response.body.data.productCreate.product.id,
-          title: response.body.data.productCreate.product.title
+          title: response.body.data.productCreate.product.title,
+          tags: response.body.data.productCreate.product.tags
         });
       });
 

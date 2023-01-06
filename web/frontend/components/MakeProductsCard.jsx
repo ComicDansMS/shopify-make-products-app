@@ -25,7 +25,7 @@ export default function MakeProductsCard() {
       return;
     }
 
-    // setIsLoading(true)
+    setIsLoading(true)
 
     const productData = formatProductData({
       titles: autoTitles ? 'auto' : productTitles,
@@ -40,6 +40,7 @@ export default function MakeProductsCard() {
         })
         setIsLoading(false);
         setProductTitles('');
+        setProductTags('');
       })
       .catch(error => {
         setIsLoading(false);
