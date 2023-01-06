@@ -6,6 +6,7 @@ export default function formatProductData(productData) {
   const tags = toArray(productData.tags);
   const usedTags = [];
   const formattedData = [];
+
   
   titles.forEach(title => {
     // Convert JSON object to string for data to be sent to API as a string
@@ -14,6 +15,7 @@ export default function formatProductData(productData) {
       tag: randomSelect(tags, usedTags)
     }))
   })
+
 
   // Convert array to string to be sent as parameters in the API request
   return formattedData.toString();
