@@ -56,17 +56,18 @@ app.get("/api/openai/gpt/:item/:category/:count", async (_req, res) => {
   const tokenCostPer1k = 0.02;
   const requestCost = tokenCostPer1k * (tokens / 1000);
 
-  console.log(`Sending request to OpenAI API for ${count} ${item} with a category of ${category} at a maximum cost of \$${requestCost}`);
-
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
   let prompt;
   
   if (item === 'products') {
-    prompt = `List ${count} descriptive, unique product titles in the category of ${category}. Seperate each item with a | character, no numbers.`;
+    prompt = `List ${count} descriptive, unique product titles in the category of ${category}. Seperate each item with a | character.`;
   } else if (item === 'tags') {
-    prompt = `List ${count} categories relating to ${category}. Seperate each item with a | character, no numbers.`;
+    prompt = `List ${count} categories relating to ${category}. Seperate each item with a | character.`;
   }
+
+  console.log(`Sending request to OpenAI API for ${count} ${item} with a category of ${category} at a maximum cost of \$${requestCost}`);
+  console.log('GPT Prompt: ', prompt);
 
   try {
     const completion = await openai.createCompletion(

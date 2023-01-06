@@ -24,6 +24,7 @@ export default function MakeProductsCard() {
   
 
   async function handleSubmit() {
+
     if (productTitles === '' && autoTitles !== true) {
       console.log('Missing titles')
       setIsLoading(false);
@@ -64,6 +65,8 @@ export default function MakeProductsCard() {
           titles: productTitles,
           tags: productTags,
         });
+
+        console.log('productData', productData)
   
         const response = await fetch(`/api/products/create/${productData}`);
         const data = await response.json();
@@ -93,15 +96,12 @@ export default function MakeProductsCard() {
       {
         autoTitles ? (
           <>
-          <div className="field">
-            <label htmlFor='productCategory'>Category</label>
-            <input
-              type="text"
+            <TextField 
+              label='Category'
               name='productCategory'
               value={productCategory}
-              onChange={(e) => setProductCategory(e.target.value)}
+              onChange={setProductCategory}
             />
-          </div>
 
             <NumberField 
               label='Product Count'
@@ -130,18 +130,20 @@ export default function MakeProductsCard() {
 
       {
         autoTags ? (
-          <NumberField 
-            label='Tag Count'
-            name='tagCount'
-            value={tagCount}
-            onChange={setTagCount}
-            min="1"
-            max="100"
-          />
+          <>
+            <NumberField 
+              label='Tag Count'
+              name='tagCount'
+              value={tagCount}
+              onChange={setTagCount}
+              min="1"
+              max="100"
+            />
+          </>
         ) : (
           <TextField 
             label='Product Tags - Seperated by a pipe character'
-            name='CheckboxField'
+            name='productTags'
             value={productTags}
             onChange={setProductTags}
           />
