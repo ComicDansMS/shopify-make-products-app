@@ -48,37 +48,80 @@ app.get("/api/products/create/:productData", async (_req, res) => {
   res.send(products);
 });
 
-app.get("/api/openai/gpt/:item/:category/:count", async (_req, res) => {  
-  const item = _req.params["item"];
+
+app.get("/api/openai/gpt/:category/:productCount/:tagCount", async (_req, res) => {  
   const category = _req.params["category"];
-  const count = parseInt(_req.params["count"]);
-  const tokens = count * 15;
+  const productCount = parseInt(_req.params["productCount"]);
+  const tagCount = parseInt(_req.params["tagCount"]);
+  const tokens = productCount * 20;
   const tokenCostPer1k = 0.02;
-  const requestCost = tokenCostPer1k * (tokens / 1000);
+  const requestCost = Math.round(tokenCostPer1k * (tokens / 1000) * 10000) / 10000;
+  const prompt = `
+    Generate ${tagCount} product categories relating to ${category}.
+    With the previously generated categories, create ${productCount} products with descriptive titles. Make some a little humourous.
+    Limit the products to the previously generated categories.
+    Give each product a price, that reflects the real-world market, with two decimal places. When assigning sizes, only include options of 's', 'm', 'l', etc.
+    If applicable, give the product options relating to the item, such as size and colour.
+    Give each product a description with a maximum length of 40 words. Do not give available sizes in description.
+    Format as a JSON object.
+    
+    Example:
+    
+    {
+        categories: [
+            'category',
+        ],
+        products: [
+            {
+              title: 'Product Title',
+              description: 'Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.'
+              tags: 'Category',
+              options: [
+                size: ['s','m','l'],
+                colour: ['granite','beige','sky blue']
+              ],
+              price: '19.99',
+              weight: 600,
+              weightUnit: 'g'
+            },
+        ]
+    }
+  `;
+
+  console.log(`
+Sending request to OpenAI
+CATEGORY: ${category}
+TAGS: ${tagCount}
+PRODUCTS: ${productCount}
+MAX TOKENS: ${tokens}
+MAX COST: \$${requestCost}
+  `);
 
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
-  let prompt;
-  
-  if (item === 'products') {
-    prompt = `List ${count} descriptive, unique product titles in the category of ${category}. Seperate each item with a | character.`;
-  } else if (item === 'tags') {
-    prompt = `List ${count} categories relating to ${category}. Seperate each item with a | character.`;
-  }
-
-  console.log(`Sending request to OpenAI API for ${count} ${item} with a category of ${category} at a maximum cost of \$${requestCost}`);
-  console.log('GPT Prompt: ', prompt);
 
   try {
     const completion = await openai.createCompletion(
       {
         model: 'text-davinci-003',
         prompt: prompt,
-        max_tokens: tokens
+        temperature: 0.5,
+        top_p: 0.5,
+        frequency_penalty: 0,
+        presence_penalty: 2,
+        max_tokens: tokens,
       }
     );
-    console.log('Prompt text:', prompt)
-    console.log('Completion text:', completion.data.choices[0].text)
+
+    const completionTokensPerProduct = completion.data.usage.total_tokens / productCount;
+    const completionTokensTotal = completion.data.usage.total_tokens;
+    const completionCost = Math.round(tokenCostPer1k * (completionTokensTotal / 1000) * 10000) / 10000;
+    const completionText = completion.data.choices[0].text;
+
+    console.log(`TOKENS PER PRODUCT: ${completionTokensPerProduct}`);
+    console.log(`TOTAL TOKENS: ${completionTokensTotal}`);
+    console.log(`TOTAL COST: \$${completionCost}`);
+    console.log(`COMPLETION TEXT: ${completionText}`);
     res.send(completion.data);
   } catch (error) {
     if (error.response) {
