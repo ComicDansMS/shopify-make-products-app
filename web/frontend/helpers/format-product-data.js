@@ -1,30 +1,30 @@
-import randomSelect from "./random-select";
-import stripFormatting from "./strip-formatting";
-import toArray from "./to-array";
+import quantityGenerator from "./quantityGenerator";
 
-export default function formatProductData(productData) {
+export default function formatProductData(inputData) {
+  const products = [];
+  let productLoopIndex = 0;
 
-  // Remove new lines and digits from list items
-  const titlesStripped = stripFormatting(productData.titles);
-  const tagsStripped = stripFormatting(productData.tags);
+  console.log('inputData: ', inputData)
 
-  // Convert string to array
-  const titlesArray = toArray(titlesStripped);
-  const tagsArray = toArray(tagsStripped);
+  inputData.forEach(product => {
+    products[productLoopIndex] = {};
 
-  // usedTags is used for randomSelect() to ensure all tags are used
-  const usedTags = [];
+    products[productLoopIndex] = {
+      title: product.title,
+      descriptionHtml: product.description,
+      productType: product.productType,
+      tags: product.tags,
+      options: [],
+      variants: [],
+    }
 
-  // String that will be sent as parameters to API route
-  const dataString = [];
-  
-  titlesArray.forEach(title => {
-    dataString.push(JSON.stringify({
-      title: title,
-      tag: randomSelect(tagsArray, usedTags)
-    }))
+    // Assign options
+    for (const [key] of Object.entries(product.options)) {
+      products[productLoopIndex].options.push(key)
+    }
+
+    productLoopIndex++;
   })
 
-  // Convert array to string to be sent as parameters in the API request
-  return dataString.toString();
+  console.log('products', products);
 }

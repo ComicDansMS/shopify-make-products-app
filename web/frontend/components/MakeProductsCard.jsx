@@ -1,40 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthenticatedFetch } from "../hooks";
 import TextField from "./Fields/TextField";
 import NumberField from "./Fields/NumberField";
 import CheckboxField from "./Fields/CheckboxField";
 import NewProducts from "./NewProducts";
 import formatProductData from "../helpers/format-product-data";
-import toggleCheckbox from "../helpers/toggle-checkbox";
-import { useEffect } from "react";
+import gptProductObject from "../helpers/gptProductObject";
 
 
 export default function MakeProductsCard() {
   const fetch = useAuthenticatedFetch();
   const [ category, setCategory ] = useState('clothing');
-  const [ productCount, setProductCount ] = useState(15);
-  const [ tagCount, setTagCount ] = useState(3);
+  const [ productCount, setProductCount ] = useState(5);
+  const [ tagCount, setTagCount ] = useState(2);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ newProducts, setNewProducts ] = useState([]);
-  
+  const [ gptResponse, setGptResponse ] = useState({});
+
+  useEffect(() => {
+    if (Object.keys(gptResponse).length !== 0) {
+      formatProductData((gptResponse.products));
+    }
+  },[gptResponse])
 
   async function handleSubmit() {
     setIsLoading(true);
 
-    if (category === '') console.log('Category is required');
-    if (productCount === '') console.log('Product count is required');
-    if (tagCount === '') console.log('Tag count is required')
+    setGptResponse(gptProductObject);
+    setIsLoading(false);
 
     // GPT request
-    try {
-      const response = await fetch(`/api/openai/gpt/${category}/${productCount}/${tagCount}`);
-      const data = await response.json();
-      console.log(data.choices[0].text);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
+    // const response = await fetch(`/api/openai/gpt/${category}/${productCount}/${tagCount}`);
+    // const json = await response.json();
+
+    // if (Object.hasOwn(json, 'choices')) {
+    //   setGptResponse(JSON.parse(json.choices[0].text));
+    //   setIsLoading(false);
+    // } else {
+    //   console.log('Encountered error');
+    //   console.log(json);
+    // }
+    
+
 
     // Shopify create products request
     // try {
@@ -48,6 +55,11 @@ export default function MakeProductsCard() {
     //   })
     // } catch (error) {
     //   console.log(error);
+    // }
+
+    //   setIsLoading(false);
+    // } catch (error) {
+    //   console.log(error)
     // }
   }
 
@@ -78,13 +90,19 @@ export default function MakeProductsCard() {
         onChange={setTagCount}
         min="1"
         max="100"
-      />      
+      />
 
       <button
         onClick={handleSubmit}
         disabled={isLoading}
       >
         { isLoading ? 'Loading...' : 'Submit' }
+      </button>
+
+      <button
+        onClick={() => setIsLoading(false)}
+      >
+        Reset
       </button>
 
       <NewProducts productList={newProducts} />

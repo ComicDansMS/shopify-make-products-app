@@ -53,49 +53,22 @@ app.get("/api/openai/gpt/:category/:productCount/:tagCount", async (_req, res) =
   const category = _req.params["category"];
   const productCount = parseInt(_req.params["productCount"]);
   const tagCount = parseInt(_req.params["tagCount"]);
-  const tokens = productCount * 20;
+  const promptTokens = 360;
+  const tokensPerProduct = 150;
+  const tokens = promptTokens + (productCount * tokensPerProduct);
   const tokenCostPer1k = 0.02;
-  const requestCost = Math.round(tokenCostPer1k * (tokens / 1000) * 10000) / 10000;
-  const prompt = `
-    Generate ${tagCount} product categories relating to ${category}.
-    With the previously generated categories, create ${productCount} products with descriptive titles. Make some a little humourous.
-    Limit the products to the previously generated categories.
-    Give each product a price, that reflects the real-world market, with two decimal places. When assigning sizes, only include options of 's', 'm', 'l', etc.
-    If applicable, give the product options relating to the item, such as size and colour.
-    Give each product a description with a maximum length of 40 words. Do not give available sizes in description.
-    Format as a JSON object.
-    
-    Example:
-    
-    {
-        categories: [
-            'category',
-        ],
-        products: [
-            {
-              title: 'Product Title',
-              description: 'Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.'
-              tags: 'Category',
-              options: [
-                size: ['s','m','l'],
-                colour: ['granite','beige','sky blue']
-              ],
-              price: '19.99',
-              weight: 600,
-              weightUnit: 'g'
-            },
-        ]
-    }
-  `;
+
+  const prompt = `Generate ${tagCount} product categories relating to ${category}.Generate ${productCount} products,with unique and obscure titles,relating to the generated categories.Make some product titles humourous, but not all.Add options if applicable to the product,such as size and colour.Have a variety of normal colour names and obscure colour names.Not all products require options.Don't include an option if there is only one value for the option.The price must not have any characters other than numbers and a period.Make a random selection of the products on sale.If it's on sale,label the original price as "compareAtPrice" and the sale price as "price".State whether product requires shipping as a boolean of true or false.Assign a product type accordiong to google shopping standardized product types (ie. "t-shirt", "mountain bike", "table").Response must be formatted as a JSON object.Example:
+
+  {"categories":["category"],"products":[{"title":"Product Title","description":"Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.","tags":["Category"],"price":"19.99","compareAtPrice":"","options":{"size":["s","m","l"],"colour":["granite","beige","sky blue"]},"productType":"Product Type","requiresShipping":!0,"weight":600,"weightUnit":"g"}]}`;
 
   console.log(`
-Sending request to OpenAI
+**** SENDING OPENAI REQUEST ****
 CATEGORY: ${category}
 TAGS: ${tagCount}
 PRODUCTS: ${productCount}
-MAX TOKENS: ${tokens}
-MAX COST: \$${requestCost}
-  `);
+TOKENS: ${tokens}`
+  );
 
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
@@ -105,30 +78,31 @@ MAX COST: \$${requestCost}
       {
         model: 'text-davinci-003',
         prompt: prompt,
-        temperature: 0.5,
-        top_p: 0.5,
+        temperature: 0.8,
+        top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 2,
         max_tokens: tokens,
       }
     );
 
-    const completionTokensPerProduct = completion.data.usage.total_tokens / productCount;
-    const completionTokensTotal = completion.data.usage.total_tokens;
-    const completionCost = Math.round(tokenCostPer1k * (completionTokensTotal / 1000) * 10000) / 10000;
-    const completionText = completion.data.choices[0].text;
+    console.log(`
+**** RESPONSE RECEIVED ****
+PROMPT TOKENS: ${completion.data.usage.prompt_tokens}
+COMPLETION TOKENS: ${completion.data.usage.completion_tokens}
+TOTAL TOKENS: ${completion.data.usage.total_tokens}
+TOKENS PER PRODUCT: ${(completion.data.usage.total_tokens - completion.data.usage.prompt_tokens) / productCount}
+TOTAL COST: \$${Math.round(tokenCostPer1k * (completion.data.usage.total_tokens / 1000) * 10000) / 10000}
+    `);
 
-    console.log(`TOKENS PER PRODUCT: ${completionTokensPerProduct}`);
-    console.log(`TOTAL TOKENS: ${completionTokensTotal}`);
-    console.log(`TOTAL COST: \$${completionCost}`);
-    console.log(`COMPLETION TEXT: ${completionText}`);
-    res.send(completion.data);
+    res.status(200).send(completion.data);
   } catch (error) {
-    if (error.response) {
-      res.send(error.response.status);
-      res.send(error.response.data);
+    if (error.response.status) {
+      console.log(error.response);
+      res.status(error.response.status).send(error.response);
     } else {
-      res.send(error.message);
+      console.log(error);
+      res.send(error);
     }
   }
 })
