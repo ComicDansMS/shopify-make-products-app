@@ -1,5 +1,4 @@
 import buildVariants from "./build-variants";
-import quantityGenerator from "./quantityGenerator";
 import extractOptions from "./extractOptions";
 
 export default function formatProductData(inputData) {

@@ -1,8 +1,12 @@
+import quantityGenerator from "./quantityGenerator";
+
 export default function buildVariants(product) {
   const variants = [];
   let productVariant = {};
   const variantOptions = [];
-  let sku = Math.floor(Math.random() * 999999999999)
+  let sku = Math.floor(Math.random() * 999999999999);
+
+  // NEED TO MAKE A FUNCTION THAT RENDERS ALL VARIANTS OUT OF STOCK
 
   function createVariantOptions(options, variant = []) {
     if (options.length === 0) {
@@ -18,11 +22,12 @@ export default function buildVariants(product) {
     }
   }
 
-  if (product.options > 0) {
+  if (product.options.length > 0) {
     createVariantOptions(product.options);
 
     variantOptions.forEach(options => {
       productVariant.compareAtPrice = product.compareAtPrice,
+      productVariant.inventoryQuantities = { availableQuantity: quantityGenerator() },
       productVariant.options = options
       productVariant.price = product.price,
       productVariant.requiresShipping = product.requiresShipping,
