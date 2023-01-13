@@ -54,20 +54,20 @@ app.get("/api/openai/gpt/:category/:productCount/:tagCount", async (_req, res) =
   const productCount = parseInt(_req.params["productCount"]);
   const tagCount = parseInt(_req.params["tagCount"]);
   const promptTokens = 360;
-  const tokensPerProduct = 150;
+  const tokensPerProduct = 100;
   const tokens = promptTokens + (productCount * tokensPerProduct);
   const tokenCostPer1k = 0.02;
+  const prompt = `Generate ${tagCount} categories relating to ${category} products.Generate ${productCount} products,with unique and obscure titles,relating to the generated categories.Make some product titles humourous, but not all.Add options if applicable to the product,such as size and colour.Have a variety of normal colour names and obscure colour names.Not all products require options.Make different products have different option counts.Don't include an option if there is only one value for the option.The price must not have any characters other than numbers and a period.Make a random selection of the products on sale.If it's on sale,label the original price as "compareAtPrice" and the sale price as "price".State whether product requires shipping as a boolean of true or false.Assign a product type.Response must be formatted as a JSON object.Example:
 
-  const prompt = `Generate ${tagCount} product categories relating to ${category}.Generate ${productCount} products,with unique and obscure titles,relating to the generated categories.Make some product titles humourous, but not all.Add options if applicable to the product,such as size and colour.Have a variety of normal colour names and obscure colour names.Not all products require options.Don't include an option if there is only one value for the option.The price must not have any characters other than numbers and a period.Make a random selection of the products on sale.If it's on sale,label the original price as "compareAtPrice" and the sale price as "price".State whether product requires shipping as a boolean of true or false.Assign a product type.Response must be formatted as a JSON object.Example:
-
-  {"categories":["category"],"products":[{"title":"Product Title","description":"Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.","tags":["Category"],"price":"19.99","compareAtPrice":"","options":{"size":["s","m","l"],"colour":["granite","beige","sky blue"]},"productType":"Product Type","requiresShipping":!0,"weight":600,"weightUnit":"g"}]}`;
+  {"categories":["category"],"products":[{"title":"Product Title","description":"Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.","tags":["Category"],"price":"19.99","compareAtPrice":"","options":[{"name":"size","values":["s","m","l"]},{"name":"colour","values":["granite","beige","sky blue"]}],"productType":"Product Type","requiresShipping":true,"weight":600,"weightUnit":"g"}]}`;
 
   console.log(`
 **** SENDING OPENAI REQUEST ****
 CATEGORY: ${category}
 TAGS: ${tagCount}
 PRODUCTS: ${productCount}
-TOKENS: ${tokens}`
+TOKENS: ${tokens}
+PROMPT: ${prompt}`
   );
 
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });

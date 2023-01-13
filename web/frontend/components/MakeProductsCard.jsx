@@ -26,20 +26,21 @@ export default function MakeProductsCard() {
   async function handleSubmit() {
     setIsLoading(true);
 
-    setGptResponse(gptProductObject);
-    setIsLoading(false);
+    // setGptResponse(gptProductObject);
+    // setIsLoading(false);
 
     // GPT request
-    // const response = await fetch(`/api/openai/gpt/${category}/${productCount}/${tagCount}`);
-    // const json = await response.json();
+    const response = await fetch(`/api/openai/gpt/${category}/${productCount}/${tagCount}`);
+    const json = await response.json();
 
-    // if (Object.hasOwn(json, 'choices')) {
-    //   setGptResponse(JSON.parse(json.choices[0].text));
-    //   setIsLoading(false);
-    // } else {
-    //   console.log('Encountered error');
-    //   console.log(json);
-    // }
+    if (Object.hasOwn(json, 'choices')) {
+      setGptResponse(JSON.parse(json.choices[0].text));
+      setIsLoading(false);
+    } else {
+      console.log('Encountered error');
+      console.log(json);
+      setIsLoading(false);
+    }
     
 
 
