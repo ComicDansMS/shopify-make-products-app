@@ -16,16 +16,36 @@ export default function ProductList(props) {
       <li key={uuidv4()} className="product-list__product">
         <h3>{product.title}</h3>
         <div className='product-list__attributes'>
-          <p key={uuidv4()}><span className="bold">Description:</span> {product.description}</p>
-          <p key={uuidv4()}><span className="bold">Price:</span> {product.price}</p>
-          <p key={uuidv4()}><span className="bold">Compare at price:</span> {product.compareAtPrice}</p>
-          <p key={uuidv4()}><span className="bold">Product type:</span> {product.productType}</p>
-          <p key={uuidv4()}><span className="bold">Options:</span> {options}</p>
-          <p key={uuidv4()}><span className="bold">Tags:</span> {product.tags.join(', ')}</p>
-          <p key={uuidv4()}><span className="bold">Vendor:</span> {product.vendor}</p>
-          <p key={uuidv4()}><span className="bold">Requires shipping:</span> {product.requiresShipping.toString()}</p>
-          <p key={uuidv4()}><span className="bold">Weight:</span> {product.weight}</p>
-          <p key={uuidv4()}><span className="bold">Weight unit:</span> {product.weightUnit}</p>
+          <div key={uuidv4()}>
+            <span className="bold">Description:</span> <span>{product.description}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Price:</span> <span>{product.price}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Compare at price:</span> <span>{product.compareAtPrice}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Product type:</span> <span>{product.productType}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Options:</span> <span>{options}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Tags:</span> <span>{product.tags.join(', ')}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Vendor:</span> <span>{product.vendor}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Requires shipping:</span> <span>{product.requiresShipping.toString()}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Weight:</span> <span>{product.weight}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Weight unit:</span> <span>{product.weightUnit}</span>
+          </div>
         </div>
       </li>
     )

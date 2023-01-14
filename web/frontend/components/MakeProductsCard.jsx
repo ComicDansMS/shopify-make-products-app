@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthenticatedFetch } from "../hooks";
 import TextField from "./Fields/TextField";
 import NumberField from "./Fields/NumberField";
-import CheckboxField from "./Fields/CheckboxField";
-import NewProducts from "./NewProducts";
-import formatProductData from "../helpers/format-product-data";
-import gptProductObject from "../helpers/gptProductObject";
-
+import ProductList from "./ProductList";
 
 export default function MakeProductsCard() {
   const fetch = useAuthenticatedFetch();
@@ -14,35 +10,23 @@ export default function MakeProductsCard() {
   const [ productCount, setProductCount ] = useState(5);
   const [ tagCount, setTagCount ] = useState(2);
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ newProducts, setNewProducts ] = useState([]);
   const [ gptResponse, setGptResponse ] = useState({});
-
-  useEffect(() => {
-    if (Object.keys(gptResponse).length !== 0) {
-      formatProductData((gptResponse.products));
-    }
-  },[gptResponse])
 
   async function handleSubmit() {
     setIsLoading(true);
 
-    // setGptResponse(gptProductObject);
-    // setIsLoading(false);
-
     // GPT request
-    const response = await fetch(`/api/openai/gpt/${category}/${productCount}/${tagCount}`);
-    const json = await response.json();
-
-    if (Object.hasOwn(json, 'choices')) {
-      setGptResponse(JSON.parse(json.choices[0].text));
+    try {
+      const response = await fetch(`/api/openai/gpt/fetch/${category}/${productCount}/${tagCount}`)
+      const data = await response.json();
+  
       setIsLoading(false);
-    } else {
-      console.log('Encountered error');
-      console.log(json);
+      setGptResponse(data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
       setIsLoading(false);
     }
-    
-
 
     // Shopify create products request
     // try {
@@ -101,12 +85,15 @@ export default function MakeProductsCard() {
       </button>
 
       <button
-        onClick={() => setIsLoading(false)}
+        onClick={() => {
+          setIsLoading(false);
+          setGptResponse({});
+        }}
       >
         Reset
       </button>
 
-      <NewProducts productList={newProducts} />
+      <ProductList productList={gptResponse.products} />
     </div>
   )
 }

@@ -1,0 +1,77 @@
+const gptProductObjectSmall = {
+    "categories":[
+        "Sportswear",
+        "Outerwear",
+        "Footwear"
+    ],
+    "products":[
+        {
+            "title":"Tailored Sports Jacket",
+            "description":"",
+            "tags":[
+                "Sportswear"
+            ],
+            "price":"125.00",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Black",
+                        "Grey",
+                        "Blue"
+                    ]
+                }
+            ],
+            "productType":"Jacket",
+            "requiresShipping":true,
+            "weight":500,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Warm Fleece Sweatshirt",
+            "description":"",
+            "tags":[
+                "Sportswear"
+            ],
+            "price":"59.95",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Navy",
+                        "White",
+                        "Charcoal Grey"
+                    ]
+                }
+            ],
+            "productType":"Sweatshirt",
+            "requiresShipping":true,
+            "weight":400,
+            "weightUnit":"g"
+        }
+    ]
+}
+
+export default gptProductObjectSmall;
