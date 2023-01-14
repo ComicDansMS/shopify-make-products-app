@@ -12,24 +12,24 @@ export default async function gptProductRequest(category, productCount, tagCount
   const tokens = promptTokens + (productCount * tokensPerProduct);
 
   return new Promise((resolve, reject) => {
-      gptLogRequest(category, tagCount, productCount, tokens);
+    gptLogRequest(category, tagCount, productCount, tokens);
 
-      openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt: gptPrompt(tagCount, category, productCount),
-        temperature: 0.8,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 2,
-        max_tokens: tokens,
+    openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: gptPrompt(tagCount, category, productCount),
+      temperature: 0.8,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 2,
+      max_tokens: tokens,
+    })
+      .then(response => {
+        gptLogResponse(response, productCount)
+        resolve(response.data.choices[0].text);
       })
-        .then(response => {
-          gptLogResponse(response, productCount)
-          resolve(response.data.choices[0].text);
-        })
-        .catch(error => {
-          console.log(error);
-          reject(error);
-        })
+      .catch(error => {
+        console.log(error);
+        reject(error);
+      })
   })  
 }
