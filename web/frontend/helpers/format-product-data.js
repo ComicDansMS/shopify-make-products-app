@@ -5,7 +5,7 @@ export default function formatProductData(inputData) {
   const products = [];
   let productLoopIndex = 0;
 
-  console.log('inputData', inputData)
+  // console.log('inputData', inputData)
 
   inputData.forEach(product => {
     products[productLoopIndex] = {};
@@ -15,12 +15,12 @@ export default function formatProductData(inputData) {
       options: extractOptions(product.options),
       descriptionHtml: product.description,
       productType: product.productType,
-      tags: ['auto-generated', ...product.tags],
+      tags: product.tags,
       variants: buildVariants(product),
     }
 
     productLoopIndex++;
   })
 
-  console.log('products', products);
+  // console.log('products', products);
 }

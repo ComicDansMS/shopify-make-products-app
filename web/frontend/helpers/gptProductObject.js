@@ -1,481 +1,489 @@
 const gptProductObject = {
     "categories":[
-        "Casual",
-        "Formal",
+        "Sportswear",
         "Outerwear",
-        "Underwear"
+        "Footwear"
     ],
     "products":[
         {
-            "title":"Velvet Jeans",
-            "description":"Premium quality velvet jeans crafted for a perfect fit.",
+            "title":"Tailored Sports Jacket",
+            "description":"",
             "tags":[
-                "Casual"
+                "Sportswear"
             ],
-            "price":"49.99",
+            "price":"125.00",
             "compareAtPrice":"",
             "options":[
                 {
                     "name":"size",
                     "values":[
-                        "s",
-                        "m",
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
                     ]
                 },
                 {
                     "name":"colour",
                     "values":[
-                        "jet black",
-                        "dark olive green",
-                        "marigold yellow",
-                        "deep rose pink"
-                    ]
-                }
-            ],
-            "productType":"Pants",
-            "requiresShipping":true,
-            "weight":800,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Stretchy Shorts",
-            "description":"These comfortable shorts are made from stretchable fabric for freedom of movement.",
-            "tags":[
-                "Casual"
-            ],
-            "price":"35.99",
-            "compareAtPrice":"45.99",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "xs",
-                        "s",
-                        "m"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "amber orange",
-                        "chartreuse"
-                    ]
-                }
-            ],
-            "productType":"Shorts",
-            "requiresShipping":true,
-            "weight":400,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Office Shirt",
-            "description":"Stylish and professional office shirts with a hint of luxury.",
-            "tags":[
-                "Formal"
-            ],
-            "price":"29.99",
-            "compareAtPrice":"",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l",
-                        "xl"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "off-white",
-                        "canary yellow"
-                    ]
-                }
-            ],
-            "productType":"Shirt",
-            "requiresShipping":true,
-            "weight":500,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Corduroy Jacket",
-            "description":"Warm corduroy jacket designed to keep you snug in the winter weather.",
-            "tags":[
-                "Outerwear"
-            ],
-            "price":"59.99",
-            "compareAtPrice":"79.99",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "s",
-                        "m"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "forest green",
-                        "burgundy red",
-                        "charcoal grey",
-                        "canary yellow"
+                        "Black",
+                        "Grey",
+                        "Blue"
                     ]
                 }
             ],
             "productType":"Jacket",
             "requiresShipping":true,
-            "weight":700,
+            "weight":500,
             "weightUnit":"g"
         },
         {
-            "title":"Silky Camisole",
-            "description":"Soft camisole made from luxurious silk fabric.",
+            "title":"Warm Fleece Sweatshirt",
+            "description":"",
             "tags":[
-                "Underwear"
+                "Sportswear"
             ],
-            "price":"19.99",
+            "price":"59.95",
             "compareAtPrice":"",
             "options":[
                 {
                     "name":"size",
                     "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l"
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
                     ]
                 },
                 {
                     "name":"colour",
                     "values":[
-                        "salmon pink",
-                        "emerald green",
-                        "powder blue"
+                        "Navy",
+                        "White",
+                        "Charcoal Grey"
                     ]
                 }
             ],
-            "productType":"Top",
+            "productType":"Sweatshirt",
             "requiresShipping":true,
-            "weight":300,
+            "weight":400,
             "weightUnit":"g"
         },
         {
-            "title":"Tweed Blazer",
-            "description":"Classic tweed blazer tailored for a slim fit.",
+            "title":"Fashionable Leather Boots",
+            "description":"",
             "tags":[
-                "Formal"
+                "Footwear"
             ],
-            "price":"124.99",
+            "price":"179.99",
             "compareAtPrice":"",
             "options":[
                 {
                     "name":"size",
                     "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l"
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
                     ]
                 },
                 {
                     "name":"colour",
                     "values":[
-                        "hazelnut brown",
-                        "navy blue",
-                        "apple green"
+                        "Brown",
+                        "Tan",
+                        "Black"
                     ]
                 }
             ],
-            "productType":"Blazer",
+            "productType":"Boots",
             "requiresShipping":true,
-            "weight":900,
+            "weight":800,
             "weightUnit":"g"
         },
         {
-            "title":"Denim Skirt",
-            "description":"High waisted denim skirt with frayed edges.",
-            "tags":[
-                "Casual"
-            ],
-            "price":"34.99",
-            "compareAtPrice":"44.99",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "xs",
-                        "s",
-                        "m"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "faded white",
-                        "ink blue",
-                        "raspberry red"
-                    ]
-                }
-            ],
-            "productType":"Skirt",
-            "requiresShipping":true,
-            "weight":600,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Knot Tank Top",
-            "description":"Trendy knot tank top with nothing else but style.",
-            "tags":[
-                "Casual"
-            ],
-            "price":"12.99",
-            "compareAtPrice":"15.99",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "smokey purple",
-                        "sand dune beige",
-                        "tangerine orange"
-                    ]
-                }
-            ],
-            "productType":"Tank Top",
-            "requiresShipping":true,
-            "weight":200,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Tuxedo Pant Suit",
-            "description":"A timeless two piece tuxedo pant suit for those formal occasions.",
-            "tags":[
-                "Formal"
-            ],
-            "price":"119.99",
-            "compareAtPrice":"",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l",
-                        "xl"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "eggshell white",
-                        "plum violet",
-                        "shimmering silver"
-                    ]
-                }
-            ],
-            "productType":"Suits",
-            "requiresShipping":true,
-            "weight":1000,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Oversized Hoodie",
-            "description":"Super comfy oversized hoodie that's perfect for chill out days.",
-            "tags":[
-                "Casual"
-            ],
-            "price":"25.99",
-            "compareAtPrice":"39.99",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "s",
-                        "m",
-                        "l",
-                        "xl"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "ash grey",
-                        "leather brown",
-                        "teal blue"
-                    ]
-                }
-            ],
-            "productType":"Hoodie",
-            "requiresShipping":true,
-            "weight":700,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Cropped Cardigan",
-            "description":"Lightweight cropped cardigan ideal for layering.",
+            "title":"Chunky Wool Cardigan",
+            "description":"",
             "tags":[
                 "Outerwear"
             ],
-            "price":"32.99",
+            "price":"69.99",
             "compareAtPrice":"",
             "options":[
                 {
                     "name":"size",
                     "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l"
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
                     ]
                 },
                 {
                     "name":"colour",
                     "values":[
-                        "magenta",
-                        "coral",
-                        "slate grey"
+                        "Mustard Yellow",
+                        "Crimson Red",
+                        "Camel Brown"
                     ]
                 }
             ],
             "productType":"Cardigan",
             "requiresShipping":true,
-            "weight":500,
+            "weight":300,
             "weightUnit":"g"
         },
         {
-            "title":"Chunky Snuggler",
-            "description":"This chunky snuggler is like a hug, only better.",
+            "title":"Stylish Running Shoes",
+            "description":"",
             "tags":[
-                "Casual"
+                "Footwear"
+            ],
+            "price":"99.95",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "36",
+                        "37",
+                        "38",
+                        "39",
+                        "40"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Orange",
+                        "Royal Blue",
+                        "Neon Green"
+                    ]
+                }
+            ],
+            "productType":"Shoes",
+            "requiresShipping":true,
+            "weight":650,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Striped Track Suit Pants",
+            "description":"",
+            "tags":[
+                "Sportswear"
+            ],
+            "price":"34.99",
+            "compareAtPrice":"49.99",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Red Stripe",
+                        "Blue Stripe",
+                        "Green Stripe"
+                    ]
+                }
+            ],
+            "productType":"Pants",
+            "requiresShipping":true,
+            "weight":350,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Trendy Denim Jean Jacket",
+            "description":"",
+            "tags":[
+                "Outerwear"
+            ],
+            "price":"79.95",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Light Wash",
+                        "Medium Wash",
+                        "Dark Wash"
+                    ]
+                }
+            ],
+            "productType":"Jacket",
+            "requiresShipping":true,
+            "weight":450,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Cozy Quilted Winter Coat",
+            "description":"",
+            "tags":[
+                "Outerwear"
+            ],
+            "price":"139.99",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Off-White",
+                        "Midnight Navy",
+                        "Slate Grey"
+                    ]
+                }
+            ],
+            "productType":"Coat",
+            "requiresShipping":true,
+            "weight":750,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Comfortable Hiking Sandals",
+            "description":"",
+            "tags":[
+                "Footwear"
+            ],
+            "price":"45.00",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Beige",
+                        "Khaki",
+                        "Olive Drab"
+                    ]
+                }
+            ],
+            "productType":"Sandals",
+            "requiresShipping":true,
+            "weight":550,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Vibrant Zip Up Hoodie",
+            "description":"",
+            "tags":[
+                "Sportswear"
             ],
             "price":"54.99",
-            "compareAtPrice":"64.99",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "one size"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "violet",
-                        "mustard yellow",
-                        "acidic lime"
-                    ]
-                }
-            ],
-            "productType":"Sweater",
-            "requiresShipping":true,
-            "weight":1000,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Ribbed Undies",
-            "description":"Comfortable ribbed undies crafted from premium cotton.",
-            "tags":[
-                "Underwear"
-            ],
-            "price":"9.99",
             "compareAtPrice":"",
             "options":[
                 {
                     "name":"size",
                     "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l"
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
                     ]
                 },
                 {
                     "name":"colour",
                     "values":[
-                        "peach",
-                        "sky blue",
-                        "olive drab"
+                        "Yellow",
+                        "Turquoise",
+                        "Pink"
                     ]
                 }
             ],
-            "productType":"Underwear",
-            "requiresShipping":true,
-            "weight":100,
-            "weightUnit":"g"
-        },
-        {
-            "title":"Plain Tunic",
-            "description":"Easy chic plain tunic perfect for any occasion.",
-            "tags":[
-                "Casual"
-            ],
-            "price":"24.99",
-            "compareAtPrice":"",
-            "options":[
-                {
-                    "name":"size",
-                    "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l"
-                    ]
-                },
-                {
-                    "name":"colour",
-                    "values":[
-                        "scarlet",
-                        "azure",
-                        "toffee"
-                    ]
-                }
-            ],
-            "productType":"Tunic",
+            "productType":"Hoodie",
             "requiresShipping":true,
             "weight":500,
             "weightUnit":"g"
         },
         {
-            "title":"Banana Tuxedo",
-            "description":"Make a statement with this bright yellow banana tuxedo.",
+            "title":"Fancy Strapped Heels",
+            "description":"",
             "tags":[
-                "Formal"
+                "Footwear"
             ],
-            "price":"84.99",
+            "price":"109.99",
             "compareAtPrice":"",
             "options":[
                 {
                     "name":"size",
                     "values":[
-                        "xs",
-                        "s",
-                        "m",
-                        "l",
-                        "xl"
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
                     ]
                 },
                 {
                     "name":"colour",
                     "values":[
-                        "banana yellow"
+                        "Silver",
+                        "Gold",
+                        "Rose Gold"
                     ]
                 }
             ],
-            "productType":"Suit",
+            "productType":"Heels",
             "requiresShipping":true,
-            "weight":1100,
+            "weight":700,
+            "weightUnit":"g"
+        },
+        {
+            "title":"All Day Cargo Shorts",
+            "description":"",
+            "tags":[
+                "Sportswear"
+            ],
+            "price":"29.99",
+            "compareAtPrice":"39.99",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "30",
+                        "32",
+                        "34",
+                        "36",
+                        "38"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Khaki",
+                        "Stone",
+                        "Olive"
+                    ]
+                }
+            ],
+            "productType":"Shorts",
+            "requiresShipping":true,
+            "weight":450,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Plush Sherpa House Slippers",
+            "description":"",
+            "tags":[
+                "Footwear"
+            ],
+            "price":"19.95",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "Small",
+                        "Medium",
+                        "Large"
+                    ]
+                }
+            ],
+            "productType":"Slippers",
+            "requiresShipping":true,
+            "weight":200,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Heavy Duty Rain Trenchcoat",
+            "description":"",
+            "tags":[
+                "Outerwear"
+            ],
+            "price":"89.99",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Sky Blue",
+                        "Graphite Grey",
+                        "Hunter Green"
+                    ]
+                }
+            ],
+            "productType":"Coat",
+            "requiresShipping":true,
+            "weight":900,
+            "weightUnit":"g"
+        },
+        {
+            "title":"Glamorous Off-the-Shoulder Top",
+            "description":"",
+            "tags":[
+                "Sportswear"
+            ],
+            "price":"54.99",
+            "compareAtPrice":"",
+            "options":[
+                {
+                    "name":"size",
+                    "values":[
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                {
+                    "name":"colour",
+                    "values":[
+                        "Dusty Rose",
+                        "Metallic Silver",
+                        "Bright Coral"
+                    ]
+                }
+            ],
+            "productType":"Top",
+            "requiresShipping":true,
+            "weight":250,
             "weightUnit":"g"
         }
     ]
