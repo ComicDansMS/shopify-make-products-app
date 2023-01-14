@@ -28,7 +28,7 @@ export default async function gptProductRequest(category, productCount, tagCount
           resolve(response.data.choices[0].text);
         })
         .catch(error => {
-          console.log('==ERROR==', error);
+          console.log(error);
           reject(error);
         })
   })  
