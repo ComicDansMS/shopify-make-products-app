@@ -1,10 +1,9 @@
-
 import { Configuration, OpenAIApi } from "openai";
-import gptPrompt from "./gpt-prompt.js";
-import gptLogRequest from "./gpt-log-request.js";
 import gptLogResponse from "./gpt-log-response.js";
+import gptLogRequest from "./gpt-log-request.js";
+import gptPrompt from "./gpt-prompt.js";
 
-export default async function gptProductRequest(category, productCount, tagCount) {
+export default async function gptRequest(category, productCount, tagCount) {
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
   const promptTokens = 360;
@@ -12,8 +11,8 @@ export default async function gptProductRequest(category, productCount, tagCount
   const tokens = promptTokens + (productCount * tokensPerProduct);
 
   return new Promise((resolve, reject) => {
-    gptLogRequest(category, tagCount, productCount, tokens);
-
+    gptLogRequest(category, tagCount, productCount, tokens)
+    
     openai.createCompletion({
       model: 'text-davinci-003',
       prompt: gptPrompt(tagCount, category, productCount),
@@ -28,8 +27,7 @@ export default async function gptProductRequest(category, productCount, tagCount
         resolve(response.data.choices[0].text);
       })
       .catch(error => {
-        console.log(error);
-        reject(error);
-      })
-  })  
+        reject(error)
+      });
+  })
 }

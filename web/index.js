@@ -8,7 +8,8 @@ import GDPRWebhookHandlers from "./gdpr.js";
 import populateProducts from "./helpers/populate-products.js";
 import dotenv from "dotenv";
 import cors from 'cors';
-import gptProductRequest from "./helpers/gpt-product-request.js";
+import gptGenerateProducts from "./helpers/gpt-generate-products.js";
+import gptValidateProducts from "./helpers/gpt-validate-products.js";
 
 dotenv.config();
 
@@ -53,14 +54,25 @@ app.get("/api/openai/gpt/fetch/:category/:productCount/:tagCount", async (_req, 
   const category = _req.params["category"];
   const productCount = parseInt(_req.params["productCount"]);
   const tagCount = parseInt(_req.params["tagCount"]);
-  
-  gptProductRequest(category, productCount, tagCount)
-    .then(response => {
-      res.status(200).send(response)
-    })
-    .catch(error => {
-      res.status(400).send(error)
-    });
+  const validation = {};
+  let haveAllData = false;
+  const productData = {
+    categories: [],
+    products: [],
+  };
+
+  try {
+    const response = await gptGenerateProducts(category, productCount, tagCount)
+
+    if (response.products) {
+      res.status(200).send(response);
+    } else {
+      res.status(400).send(response)
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(400).send(error)
+  }
 })
 
 app.use(serveStatic(STATIC_PATH, { index: false }));

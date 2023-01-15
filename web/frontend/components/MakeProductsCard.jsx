@@ -7,8 +7,8 @@ import ProductList from "./ProductList";
 export default function MakeProductsCard() {
   const fetch = useAuthenticatedFetch();
   const [ category, setCategory ] = useState('clothing');
-  const [ productCount, setProductCount ] = useState(5);
-  const [ tagCount, setTagCount ] = useState(2);
+  const [ productCount, setProductCount ] = useState(2);
+  const [ tagCount, setTagCount ] = useState(1);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ gptResponse, setGptResponse ] = useState({});
 
