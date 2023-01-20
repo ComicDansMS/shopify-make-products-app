@@ -9,7 +9,6 @@ import populateProducts from "./helpers/populate-products.js";
 import dotenv from "dotenv";
 import cors from 'cors';
 import gptGenerateProducts from "./helpers/gpt-generate-products.js";
-import gptValidateProducts from "./helpers/gpt-validate-products.js";
 
 dotenv.config();
 

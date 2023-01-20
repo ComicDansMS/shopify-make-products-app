@@ -1,40 +1,33 @@
+import { Configuration, OpenAIApi } from "openai";
+import gptLogResponse from "./gpt-log-response.js";
 import gptLogRequest from "./gpt-log-request.js";
-import gptRequest from "./gpt-request.js";
-import gptValidateProducts from "./gpt-validate-products.js";
+import gptPrompt from "./gpt-prompt.js";
 
 export default async function gptGenerateProducts(category, productCount, tagCount) {
-  let responseData;
-  let validationPass = false;
-
-  function checkResponseData(data) {
-    const validation = gptValidateProducts(data);
-
-    if (validation.passed) {
-      console.log('Validation passed');
-      validationPass = true;
-    }
-  }
+  const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
+  const openai = new OpenAIApi(configuration);
+  const promptTokens = 360;
+  const tokensPerProduct = 150;
+  const tokens = promptTokens + (productCount * tokensPerProduct);
 
   return new Promise((resolve, reject) => {
-    function makeRequest() {
-      gptRequest(category, productCount, tagCount)
+    gptLogRequest(category, tagCount, productCount, tokens)
+    
+    openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: gptPrompt(tagCount, category, productCount),
+      temperature: 0.8,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 2,
+      max_tokens: tokens,
+    })
       .then(response => {
-        responseData = JSON.parse(response);
-        checkResponseData(responseData);
-  
-        if (validationPass) {
-          resolve(responseData);
-        } else {
-          makeRequest();
-        }
+        gptLogResponse(response, productCount)
+        resolve(response.data.choices[0].text);
       })
       .catch(error => {
-        console.log('ERROR');
-        console.log(error);
-        reject(error);
-      })
-    }
-
-    makeRequest();
+        reject(error)
+      });
   })
 }
