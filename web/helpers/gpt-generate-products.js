@@ -1,33 +1,95 @@
-import { Configuration, OpenAIApi } from "openai";
-import gptLogResponse from "./gpt-log-response.js";
-import gptLogRequest from "./gpt-log-request.js";
+import gptRequest from "./gpt-request.js";
 import gptPrompt from "./gpt-prompt.js";
 
-export default async function gptGenerateProducts(category, productCount, tagCount) {
-  const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
-  const openai = new OpenAIApi(configuration);
-  const promptTokens = 360;
-  const tokensPerProduct = 150;
-  const tokens = promptTokens + (productCount * tokensPerProduct);
+export default async function gptGenerateProducts(reqArgs) {
+  const { reqCategory, reqTagCount, reqProductCount } = reqArgs;
+  const productData = {
+    categories: [],
+    products: [],
+  };
+
+  const paromptArgs = {
+    category: reqCategory,
+    tagCount: reqTagCount,
+    productCount: reqProductCount,
+    promptType: 'full',
+    tags: [],
+    partialProductCount: null,
+  };
+
+  const prompt = gptPrompt(paromptArgs);
+
+  async function initiate() {
+    try {
+      await initialRequest()
+
+      if (validateProductData() == 'ok') {
+        return productData;
+      }
+
+      // if (validateProductData() == 'short') {
+      //   updateReqArgs();
+      //   updatePrompt();
+
+      //   await partialRequest();
+      // }
+
+    } catch (error) {
+      return error;
+    }
+  }
+
+
+  async function initialRequest() {
+    try {
+      const response = await gptRequest(reqArgs, prompt);
+      const responseJson = JSON.parse(response);
+      productData.categories = responseJson.categories;
+      productData.products = responseJson.products;
+
+      return productData;
+    } catch (error) {
+      console.log(error)
+      return error;
+    }
+  }
+
+  async function partialRequest() {
+    try {
+      const response = await gptRequest(reqArgs, prompt);
+      const responseJson = JSON.parse(response);
+      productData.products.push(responseJson.products)
+
+    } catch (error) {
+      console.log(error)
+      return error;
+    }
+  }
+
+  function updateReqArgs() {
+
+  }
+
+  function updatePrompt() {
+
+  }
+
+  function validateProductData() {
+    if (productData.products.length >= reqProductCount) {
+      return 'ok'
+    }
+
+    if (productData.products.length > 0 && productData.products.length < reqProductCount) {
+      return 'short'
+    }
+
+     return 'error'
+  }
+  
 
   return new Promise((resolve, reject) => {
-    gptLogRequest(category, tagCount, productCount, tokens)
-    
-    openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: gptPrompt(tagCount, category, productCount),
-      temperature: 0.8,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 2,
-      max_tokens: tokens,
-    })
-      .then(response => {
-        gptLogResponse(response, productCount)
-        resolve(response.data.choices[0].text);
-      })
-      .catch(error => {
-        reject(error)
-      });
+    initiate()
+      .then(response => resolve(response))
+      .catch(error => reject(error));
   })
 }

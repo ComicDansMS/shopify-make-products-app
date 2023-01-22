@@ -50,18 +50,14 @@ app.get("/api/products/create/:productData", async (_req, res) => {
 
 
 app.get("/api/openai/gpt/fetch/:category/:productCount/:tagCount", async (_req, res) => {
-  const category = _req.params["category"];
-  const productCount = parseInt(_req.params["productCount"]);
-  const tagCount = parseInt(_req.params["tagCount"]);
-  const validation = {};
-  let haveAllData = false;
-  const productData = {
-    categories: [],
-    products: [],
-  };
+  const reqArgs = {
+    reqCategory: _req.params["category"],
+    reqProductCount: parseInt(_req.params["productCount"]),
+    reqTagCount: parseInt(_req.params["tagCount"]),
+  }
 
   try {
-    const response = await gptGenerateProducts(category, productCount, tagCount)
+    const response = await gptGenerateProducts(reqArgs)
 
     if (response.products) {
       res.status(200).send(response);
