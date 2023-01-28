@@ -6,8 +6,8 @@ export default function gptRequest(reqArgs, prompt) {
   let { reqCategory, reqTagCount, reqProductCount } = reqArgs;
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
-  const promptTokens = 360;
-  const tokensPerProduct = 150;
+  const promptTokens = 413;
+  const tokensPerProduct = 120;
   const tokens = promptTokens + (reqProductCount * tokensPerProduct);
 
   if (reqArgs.partialProductCount) {
@@ -32,7 +32,7 @@ export default function gptRequest(reqArgs, prompt) {
       max_tokens: tokens,
     })
     .then(response => {
-      gptLogResponse(response, reqProductCount);
+      gptLogResponse(response);
       resolve(response.data.choices[0].text);
     })
     .catch(error => {

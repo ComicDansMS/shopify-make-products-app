@@ -21,7 +21,7 @@ export default async function gptGenerateProducts(reqArgs) {
 
   async function getProducts() {   
     try {
-      for (let i = 0; requests < 5; i++) {
+      for (let i = 0; requests < 15; i++) {
         console.log(`== Begin forloop. Requests: ${requests} ==`);
 
         if (validateProductData() == 'empty') {
