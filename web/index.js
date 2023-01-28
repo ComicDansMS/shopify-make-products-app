@@ -54,21 +54,21 @@ app.get("/api/openai/gpt/fetch/:category/:productCount/:tagCount", async (_req, 
     reqCategory: _req.params["category"],
     reqProductCount: parseInt(_req.params["productCount"]),
     reqTagCount: parseInt(_req.params["tagCount"]),
-  }
+  };
 
   try {
-    const response = await gptGenerateProducts(reqArgs)
+    const response = await gptGenerateProducts(reqArgs);
 
     if (response.products) {
       res.status(200).send(response);
     } else {
-      res.status(400).send(response)
+      res.status(400).send(response);
     }
   } catch (error) {
-    console.log(error)
-    res.status(400).send(error)
+    console.log(error);
+    res.status(400).send(error);
   }
-})
+});
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
