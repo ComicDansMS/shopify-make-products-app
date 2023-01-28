@@ -3,36 +3,39 @@ import gptPrompt from "./gpt-prompt.js";
 import gptSampleData from "./gpt-sample-data.js";
 
 export default async function gptGenerateProducts(reqArgs) {
-  const { reqCategory, reqTagCount, reqProductCount } = reqArgs;
-  let requests = 0;
-  let productData = {
-    categories: [],
-    products: [],
-  };
-  const promptArgs = {
-    category: reqCategory,
-    tagCount: reqTagCount,
-    productCount: reqProductCount,
-    promptType: 'full',
+  let productData = { categories: [], products: [] };
+
+  const parameters = {
+    category: reqArgs.reqCategory,
+    tagCount: reqArgs.reqTagCount,
+    productCount: reqArgs.reqProductCount,
     tags: [],
-  };
-  let prompt = gptPrompt(promptArgs);
+    requestType: 'full',
+    prompt: '',
+    tokens: 0,
+  }
 
 
-  async function getProducts() {   
+  async function getProducts() {
+    parameters.prompt = gptPrompt(parameters);
+    parameters.tokens = calculateTokens(parameters);
+
     try {
-      for (let i = 0; requests < 15; i++) {
-        console.log(`== Begin forloop. Requests: ${requests} ==`);
+      for (let i = 0; i < 2; i++) {
+        console.log(`== Begin forloop. Loop count: ${i} ==`);
 
         if (validateProductData() == 'empty') {
+          console.log(`== Product list empty ==`);
           await fullRequest();
         }
 
         if (validateProductData() == 'short') {
+          console.log(`== Product list short - ${productData.products.length} of ${parameters.productCount} products. ==`);
           await partialRequest();
         }
 
         if (validateProductData() == 'ok') {
+          console.log('== Product list ok ==');
           return productData;
         }
       }
@@ -41,13 +44,19 @@ export default async function gptGenerateProducts(reqArgs) {
     }
   }
 
+  function calculateTokens(parameters) {
+    const promptTokens = parameters.prompt.length / 4;
+    const tokensPerProduct = 120;
+    const tokens = promptTokens + (parameters.productCount * tokensPerProduct);
+
+    return Math.round(tokens);
+  }
+
 
   async function fullRequest() {
     console.log('== Making full request ==');
     try {
-      requests++;
-
-      const response = await gptRequest(reqArgs, prompt);
+      const response = await gptRequest(parameters);
       const responseJson = JSON.parse(response);
 
       productData.categories = responseJson.categories;
@@ -62,14 +71,12 @@ export default async function gptGenerateProducts(reqArgs) {
 
 
   async function partialRequest() {
-    console.log(`== ${productData.products.length} of ${reqProductCount} products. Making partial request ==`);
-    requests++;
+    console.log(`== ${productData.products.length} of ${parameters.productCount} products. Making partial request ==`);
 
-    updateReqArgs();
-    updatePrompt();
+    updateParameters();
 
     try {
-      const response = await gptRequest(reqArgs, prompt);
+      const response = await gptRequest(parameters);
       const responseJson = JSON.parse(response);
 
       if (Array.isArray(responseJson.products) && responseJson.products.length > 0) {
@@ -84,32 +91,25 @@ export default async function gptGenerateProducts(reqArgs) {
   }
 
 
-  function updateReqArgs() {
-    reqArgs.partialProductCount = reqProductCount - productData.products.length;
-    promptArgs.promptType = 'partial';
-    promptArgs.tags = productData.categories;
-    promptArgs.productCount = reqProductCount - productData.products.length;
-  }
-
-
-  function updatePrompt() {
-    prompt = gptPrompt(promptArgs);
+  function updateParameters() {
+    parameters.productCount = parameters.productCount - productData.products.length;
+    parameters.requestType = 'partial';
+    parameters.tags = productData.categories;
+    parameters.prompt = gptPrompt(parameters);
+    parameters.tokens = calculateTokens(parameters);
   }
   
 
   function validateProductData() {
-    if (productData.products.length >= reqProductCount) {
-      console.log('== Validation ok ==');
+    if (productData.products.length >= parameters.productCount) {
       return 'ok'
     }
 
-    if (productData.products.length > 0 && productData.products.length < reqProductCount) {
-      console.log(`== Validation short - ${productData.products.length} of ${reqProductCount} products. ==`);
+    if (productData.products.length > 0 && productData.products.length < parameters.productCount) {
       return 'short'
     }
 
     if (productData.products.length == 0) {
-      console.log(`== Validation empty ==`);
       return 'empty'
     }
 

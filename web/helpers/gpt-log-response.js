@@ -2,18 +2,21 @@ export default function gptLogResponse(completion) {
   try {
     const responseJson = JSON.parse(completion.data.choices[0].text);
     const totalProducts = responseJson.products.length;
-    const costPerToken = 0.02 / 1000;
+    const tokenPrice = 0.02 / 1000;
 
-    console.log(`
-== RESPONSE RECEIVED ==
-RETURNED PRODUCTS: ${totalProducts}
-COMPLETION TOKENS: ${completion.data.usage.completion_tokens}
-TOTAL TOKENS: ${completion.data.usage.total_tokens}
-TOKENS PER PRODUCT: ${(completion.data.usage.total_tokens - completion.data.usage.prompt_tokens) / totalProducts}
-TOTAL COST: \$${completion.data.usage.total_tokens * costPerToken}
-`);
+    const completionTokens = completion.data.usage.completion_tokens;
+    const totalTokens = completion.data.usage.total_tokens;
+    const tokensPerProduct = (completion.data.usage.total_tokens - completion.data.usage.prompt_tokens) / totalProducts;
+    const totalPrice = (totalTokens * tokenPrice).toFixed(4);
+
+    console.log(`== Response received ==
+  Returned products: ${totalProducts}
+  Completion tokens: ${completionTokens}
+  Total tokens: ${totalTokens}
+  Tokens per product: ${tokensPerProduct}
+  Total cost: \$${totalPrice}`);
   } catch {
-    console.log('== Error while logging response. Response: ==')
-    console.log(`== COMPLETION.DATA: ${completion.data}`)
+    console.log(`== Response received ==
+  Bad response - Unable to process data.`);
   }  
 }

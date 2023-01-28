@@ -2,34 +2,26 @@ import { Configuration, OpenAIApi } from "openai";
 import gptLogResponse from "./gpt-log-response.js";
 import gptLogRequest from "./gpt-log-request.js";
 
-export default function gptRequest(reqArgs, prompt) {
-  let { reqCategory, reqTagCount, reqProductCount } = reqArgs;
+export default function gptRequest(parameters) {
   const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
-  const promptTokens = 413;
-  const tokensPerProduct = 120;
-  const tokens = promptTokens + (reqProductCount * tokensPerProduct);
-
-  if (reqArgs.partialProductCount) {
-    reqProductCount = reqArgs.partialProductCount;
-  }
 
   return new Promise((resolve, reject) => {
-    gptLogRequest(reqCategory, reqTagCount, reqProductCount, tokens);
+    gptLogRequest(parameters);
 
-    if (tokens >= 4000) {
-      console.log(`== Tokens exceeed limit of 4000. Estimated max tokens for current request: ${tokens} ==`)
-      reject(`Tokens exceeed limit of 4000. Estimated max tokens for current request: ${tokens}`)
+    if (parameters.tokens >= 4000) {
+      console.log(`== Tokens exceeed limit of 4000. Estimated max tokens for current request: ${parameters.tokens} ==`)
+      reject(`Tokens exceeed limit of 4000. Estimated max tokens for current request: ${parameters.tokens}`)
     }
 
     openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: prompt,
+      prompt: parameters.prompt,
       temperature: 0.8,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 2,
-      max_tokens: tokens,
+      max_tokens: parameters.tokens,
     })
     .then(response => {
       gptLogResponse(response);
