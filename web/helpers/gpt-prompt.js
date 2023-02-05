@@ -1,9 +1,38 @@
 export default function gptPrompt(parameters) {
+  let prompt = '';
+  
+
   if (parameters.requestType === 'full') {
-    return `Generate ${parameters.tagCount} categories relating to ${parameters.category} products.Generate ${parameters.productCount} products,with unique and obscure titles,relating to the generated categories.Make some product titles humourous, but not all.Product titles must be at least 5 words long. Some titles are up to 8 words long.Add options if applicable to the product,such as size and colour.Dont limit options to size and colour.Have a variety of normal and obscure option names.If defining sizes, keep it to the same value - All 's, m, l' or 'small, medium, large'.Not all products require options.Different products have different option counts.Don't include an option if there is only one value for the option.State the brand of the product as the vendor.The price must not have any characters other than numbers and a period.Make a random selection of the products on sale.If it's on sale,label the original price as "compareAtPrice" and the sale price as "price".State whether product requires shipping as a boolean of true or false.Assign a product type.Response must be formatted as a JSON object.Example: {"categories":["category"],"products":[{"title":"Product Title","description":"Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.","tags":["Category"],"price":"19.99","compareAtPrice":"","options":[{"name":"size","values":["s","m","l"]},{"name":"colour","values":["granite","beige","sky blue"]}],"vendor":"Brand","productType":"Product Type","requiresShipping":true,"weight":600,"weightUnit":"g"}]}`;
+    prompt = `
+Create ${parameters.tagCount} categories relating to ${parameters.category}, and create ${parameters.productCountNextRequest} related products relating to the categories.
+Make the titles unique and obscure, and 4 to 8 words long.
+The product description should be between 30 and 50 words long.
+If the product is on sale, the original price is the compareAtPrice, and the sale price is 'price'.
+Options are not required on every product.
+State whether product requires shipping. Digital products dont require shipping.
+Include two image generation prompts. They should be unique to one another, and describe the product in the scene, and have an editorial photography style to them.  
+Response should be in JSON format. Example:
+
+{"categories":["winter warmers","hats"],"products":[{"title":"product title","description":"product description","tags":["category"],"price":"19.50","compareAtPrice":"25.00","options":[{"name":"size","values":["s","m","l"]},{"name":"colour","values":["green","yellow","blue"]}],"vendor":"Brand","productType":"product type","requiresShipping":true,"weight":400,"weightUnit":"g","dallePrompts":[]}]}
+`;
   }
 
+  
+
   if (parameters.requestType === 'partial') {
-    return  `Generate ${parameters.productCount} products,with unique and obscure titles,relating to ${parameters.category}, that fall into the following sub-categories:${parameters.tags.join(', ')}.Assign the appropriate sub-category to the product tags.Make some product titles humourous, but not all.Product titles must be at least 5 words long. Some titles are up to 8 words long.Add options if applicable to the product,such as size and colour.Dont limit options to size and colour.Have a variety of normal and obscure option names.If defining sizes, keep it to the same value - All 's, m, l' or 'small, medium, large'.Not all products require options.Different products have different option counts.Don't include an option if there is only one value for the option.State the brand of the product as the vendor.The price must not have any characters other than numbers and a period.Make a random selection of the products on sale.If it's on sale,label the original price as "compareAtPrice" and the sale price as "price".State whether product requires shipping as a boolean of true or false.Assign a product type.Response must be in a correctly formatted JSON object with quotes around the keys and values. Example: {"products":[{"title":"Product Title","description":"Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.","tags":["tag"],"price":"19.99","compareAtPrice":"","options":[{"name":"size","values":["s","m","l"]},{"name":"colour","values":["granite","beige","sky blue"]}],"vendor":"Brand","productType":"Product Type","requiresShipping":true,"weight":600,"weightUnit":"g"}]}`;
+    prompt = `
+Create ${parameters.productCountNextRequest} products relating to ${parameters.category} that are related to the following sub-categories:${parameters.tags.join(', ')}.
+Make the titles unique and obscure, and 4 to 8 words long.
+The product description should be between 30 and 50 words long.
+If the product is on sale, the original price is the compareAtPrice, and the sale price is 'price'.
+Options are not required on every product.
+State whether product requires shipping. Digital products dont require shipping.
+Include two image generation prompts. They should be unique to one another, and describe the product in the scene, and have an editorial photography style to them. 
+Response should be in JSON format. Example:
+
+{"categories":["winter warmers","hats"],"products":[{"title":"product title","description":"product description","tags":["category"],"price":"19.50","compareAtPrice":"25.00","options":[{"name":"size","values":["s","m","l"]},{"name":"colour","values":["green","yellow","blue"]}],"vendor":"Brand","productType":"product type","requiresShipping":true,"weight":400,"weightUnit":"g","dallePrompts":[]}]}
+`;
   }
+
+  return prompt;
 }

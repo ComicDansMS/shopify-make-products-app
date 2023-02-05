@@ -9,7 +9,11 @@ export default function ProductList(props) {
 
   const listItems = products.map(product => {
     const options = product.options.map(option => {
-      return <p key={uuidv4()} className="product-list__option">{option.name}: {option.values.join(', ')}</p>;
+      return <p key={uuidv4()} className="product-list__sub-list">{option.name}: {option.values.join(', ')}</p>;
+    })
+
+    const dallePrompts = product.dallePrompts.map(prompt => {
+      return <p key={uuidv4()} className="product-list__sub-list">{prompt}</p>;
     })
 
     return (
@@ -45,6 +49,15 @@ export default function ProductList(props) {
           </div>
           <div key={uuidv4()}>
             <span className="bold">Weight unit:</span> <span>{product.weightUnit}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Dalle prompts:</span> <span>{dallePrompts}</span>
+          </div>
+          <div key={uuidv4()}>
+            <span className="bold">Image:</span>
+            <div>
+              <img src={product.image} alt={product.title} />
+            </div>
           </div>
         </div>
       </li>

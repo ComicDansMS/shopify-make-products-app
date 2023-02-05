@@ -9,19 +9,14 @@ export default function gptRequest(parameters) {
   return new Promise((resolve, reject) => {
     gptLogRequest(parameters);
 
-    if (parameters.tokens >= 4000) {
-      console.log(`== Tokens exceeed limit of 4000. Estimated max tokens for current request: ${parameters.tokens} ==`)
-      reject(`Tokens exceeed limit of 4000. Estimated max tokens for current request: ${parameters.tokens}`)
-    }
-
     openai.createCompletion({
       model: 'text-davinci-003',
       prompt: parameters.prompt,
-      temperature: 0.8,
+      temperature: 0.9,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 2,
-      max_tokens: parameters.tokens,
+      max_tokens: 3690,
     })
     .then(response => {
       gptLogResponse(response);

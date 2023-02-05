@@ -1,6 +1,7 @@
 import gptRequest from "./gpt-request.js";
 import gptPrompt from "./gpt-prompt.js";
 import gptSampleData from "./gpt-sample-data.js";
+import gptGenerateImage from "./gpt-generate-image.js";
 
 export default async function gptGenerateProducts(reqArgs) {
   let productData = { categories: [], products: [] };
@@ -8,34 +9,67 @@ export default async function gptGenerateProducts(reqArgs) {
   const parameters = {
     category: reqArgs.reqCategory,
     tagCount: reqArgs.reqTagCount,
-    productCount: reqArgs.reqProductCount,
+    productCountRequested: reqArgs.reqProductCount,
+    productCountCurrent: 0,
+    productCountRemaining: 0,
+    productCountNextRequest: 0,
     tags: [],
     requestType: 'full',
     prompt: '',
+    totalRequestTokens: 0,
     tokens: 0,
+    tokensPerProduct: 200,
+    maxTokenLimit: 3626,
+    requestsRequiredInitial: 0,
+    requestsRequiredRemaining: 0,
+    requestsPerformed: 0,
   }
 
-
-  async function getProducts() {
-    parameters.prompt = gptPrompt(parameters);
-    parameters.tokens = calculateTokens(parameters);
+  async function getImages() {
+    console.log(`== Fetching images ==`)
+    const promiseArray = [];
+    let delay = 0;
 
     try {
-      for (let i = 0; i < 2; i++) {
-        console.log(`== Begin forloop. Loop count: ${i} ==`);
+      for (let i = 0; i < productData.products.length; i++) {
+        // promiseArray.push(gptGenerateImage(productData.products[i].dallePrompts[0], delay))
+        promiseArray.push(gptGenerateImage(productData.products[i].description, delay))
+        delay = delay + 1000;
+      }
+      
+      const images = await Promise.all(promiseArray)
+      
+      for (let i = 0; i < productData.products.length; i++) {
+        productData.products[i].image = images[i];
+      }
+  
+      return;
+    } catch (error) {
+      console.log('== Error fetching images')
+      console.log(error)
+      return;
+    }
+  }
 
-        if (validateProductData() == 'empty') {
-          console.log(`== Product list empty ==`);
+  async function getProducts() {
+    setParameters();
+
+    try {
+      for (let i = 0; i < 15; i++) {
+        if (parameters.requestsPerformed === 0 || validateProductData() === 'empty') {
           await fullRequest();
+          parameters.requestsPerformed++
         }
 
-        if (validateProductData() == 'short') {
-          console.log(`== Product list short - ${productData.products.length} of ${parameters.productCount} products. ==`);
+        if (validateProductData() === 'short') {
+          setParameters();
           await partialRequest();
+          parameters.requestsPerformed++
         }
 
         if (validateProductData() == 'ok') {
-          console.log('== Product list ok ==');
+          await getImages();
+
           return productData;
         }
       }
@@ -44,17 +78,8 @@ export default async function gptGenerateProducts(reqArgs) {
     }
   }
 
-  function calculateTokens(parameters) {
-    const promptTokens = parameters.prompt.length / 4;
-    const tokensPerProduct = 120;
-    const tokens = promptTokens + (parameters.productCount * tokensPerProduct);
-
-    return Math.round(tokens);
-  }
-
 
   async function fullRequest() {
-    console.log('== Making full request ==');
     try {
       const response = await gptRequest(parameters);
       const responseJson = JSON.parse(response);
@@ -64,17 +89,13 @@ export default async function gptGenerateProducts(reqArgs) {
 
       return;
     } catch (error) {
-      console.log(error)
+      console.log('== Request failed - Data not valid ==')
       return error;
     }
   }
 
 
   async function partialRequest() {
-    console.log(`== ${productData.products.length} of ${parameters.productCount} products. Making partial request ==`);
-
-    updateParameters();
-
     try {
       const response = await gptRequest(parameters);
       const responseJson = JSON.parse(response);
@@ -85,37 +106,66 @@ export default async function gptGenerateProducts(reqArgs) {
       
       return;
     } catch (error) {
-      console.log(error)
+      console.log('== Request failed - Data not valid ==')
       return error;
     }
   }
 
 
-  function updateParameters() {
-    parameters.productCount = parameters.productCount - productData.products.length;
-    parameters.requestType = 'partial';
+  function setParameters() {
+    (productData.products.length === 0) ? parameters.requestType = 'full' : parameters.requestType = 'partial';
     parameters.tags = productData.categories;
+    parameters.totalRequestTokens = calculateTokens(parameters.productCountRequested);
+    parameters.productCountCurrent = productData.products.length;
+    parameters.productCountRemaining = parameters.productCountRequested - productData.products.length;
+
+    // Set total required requests (as calculated on first request)
+    parameters.requestsRequiredInitial = Math.ceil(calculateTokens(parameters.productCountRequested) / parameters.maxTokenLimit);
+
+    // Set current required request count - Divide total total token cost by max token limit
+    parameters.requestsRequiredRemaining = Math.ceil(calculateTokens(parameters.productCountRemaining) / parameters.maxTokenLimit);
+
+    // Set amount of products to fetch on next request -  Divide required product count with previous value ^^ and set in parameters as next fetch
+    parameters.productCountNextRequest = Math.floor(parameters.productCountRemaining / parameters.requestsRequiredRemaining);
+
+    // Max out at 10 per request as response seems to break with too many products.
+    // if (parameters.productCountRemaining > 10) {
+    //   parameters.productCountNextRequest = 10
+    // } else {
+    //   parameters.productCountNextRequest = Math.floor(parameters.productCountRemaining / parameters.requestsRequiredRemaining);
+    // }    
+    
+    // Set prompt
     parameters.prompt = gptPrompt(parameters);
-    parameters.tokens = calculateTokens(parameters);
+
+    // Calculate total token cost
+    parameters.tokens = calculateTokens(parameters.productCountNextRequest);
+  }
+
+
+  function calculateTokens(productCount) {
+    const estimatedPromptCost = 270;
+    return Math.round(productCount * parameters.tokensPerProduct) + estimatedPromptCost;;
   }
   
 
   function validateProductData() {
-    if (productData.products.length >= parameters.productCount) {
+    if (productData.products.length >= parameters.productCountRequested) {
       return 'ok'
-    }
-
-    if (productData.products.length > 0 && productData.products.length < parameters.productCount) {
-      return 'short'
     }
 
     if (productData.products.length == 0) {
       return 'empty'
     }
 
+    if (productData.products.length < parameters.productCountRequested) {
+      return 'short'
+    }
+
     console.log(`== Validation error ==`);
      return 'error'
   }
+
 
   // For testing purposes
   // function removeProduct() {
